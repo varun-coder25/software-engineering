@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply min-h-screen bg-slate-950 text-slate-900 antialiased;
+  background:
+    radial-gradient(circle at top, rgba(147, 197, 253, 0.35), transparent 30%),
+    linear-gradient(180deg, #eff6ff 0%, #f8fbff 42%, #e8eefb 100%);
+}
+
+::selection {
+  @apply bg-blue-200 text-slate-900;
+}
+
+.glass-panel {
+  @apply rounded-3xl border border-white/70 bg-white/85 shadow-panel backdrop-blur;
+}
+
+.field {
+  @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100;
+}
+
+.button-primary {
+  @apply inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300;
+}
+
+.button-secondary {
+  @apply inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-200 hover:text-blue-700;
+}
