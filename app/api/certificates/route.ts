@@ -4,6 +4,29 @@ import { createSupabaseServiceClient } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 
+function getErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  if (error && typeof error === "object") {
+    const maybeMessage = "message" in error ? error.message : undefined;
+    const maybeDetails = "details" in error ? error.details : undefined;
+    const maybeHint = "hint" in error ? error.hint : undefined;
+    const maybeCode = "code" in error ? error.code : undefined;
+
+    const parts = [maybeMessage, maybeDetails, maybeHint, maybeCode].filter(
+      (value): value is string => typeof value === "string" && value.trim().length > 0
+    );
+
+    if (parts.length > 0) {
+      return parts.join(" | ");
+    }
+  }
+
+  return fallback;
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -39,8 +62,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ certificates: data ?? [] });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to fetch certificates.";
+    const message = getErrorMessage(error, "Failed to fetch certificates.");
+    console.error("GET /api/certificates failed", error);
 
     return NextResponse.json({ error: message }, { status: 500 });
   }
@@ -94,8 +117,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ certificate: data });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to create certificate.";
+    const message = getErrorMessage(error, "Failed to create certificate.");
+    console.error("POST /api/certificates failed", error);
 
     return NextResponse.json({ error: message }, { status: 500 });
   }
