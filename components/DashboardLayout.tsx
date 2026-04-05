@@ -49,7 +49,7 @@ export default function DashboardLayout({
           <Navbar email={email} />
 
           <section className="overview-grid" id="overview">
-            <Card className="min-w-0 overflow-hidden border-sky-100/70 bg-gradient-to-br from-white via-white to-sky-50/70">
+            <Card className="min-w-0 overflow-hidden border-sky-100/70 bg-gradient-to-br from-white via-white to-sky-50/70 dark:border-slate-800 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
               <CardHeader className="space-y-4 p-7 sm:p-8">
                 <Badge className="w-fit" variant="default">
                   {eyebrow}
@@ -57,7 +57,7 @@ export default function DashboardLayout({
                 <CardTitle className="max-w-3xl font-[family-name:var(--font-serif)] text-3xl leading-tight text-slate-950 sm:text-[3.25rem]">
                   {title}
                 </CardTitle>
-                <p className="max-w-3xl text-base leading-8 text-slate-600">
+                <p className="max-w-3xl text-base leading-8 text-slate-600 dark:text-slate-300">
                   {description}
                 </p>
               </CardHeader>
