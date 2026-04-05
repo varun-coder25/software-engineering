@@ -31,21 +31,21 @@ export default function Navbar({
   return (
     <header className="surface-panel sticky top-4 z-20 flex flex-col gap-4 px-5 py-4 xl:flex-row xl:items-center xl:justify-between">
       <div className="min-w-0">
-        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-700 dark:text-sky-300">
+        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-300">
           <Sparkles className="h-4 w-4" />
           {eyebrow}
         </div>
-        <h1 className="mt-2 text-xl font-semibold text-slate-900 dark:text-white sm:text-2xl">
+        <h1 className="mt-2 text-xl font-semibold text-white sm:text-2xl">
           {title}
         </h1>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <div className="hidden items-center gap-3 rounded-2xl border border-slate-200/80 bg-slate-50 px-4 py-2 dark:border-slate-800 dark:bg-slate-950/60 lg:flex">
+        <div className="hidden items-center gap-3 rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-2 lg:flex">
           <BellRing className="h-4 w-4 text-sky-500" />
           <div className="text-right">
             <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Logged in</p>
-            <p className="max-w-44 truncate text-sm font-medium text-slate-700 dark:text-slate-200">
+            <p className="max-w-44 truncate text-sm font-medium text-slate-200">
               {email ?? "Student"}
             </p>
           </div>

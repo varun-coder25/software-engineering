@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getRequestContext } from "@/lib/server-auth";
+import { createSupabaseServiceClient } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 
@@ -47,7 +48,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { supabase, user, role } = await getRequestContext(request);
+    const { user, role } = await getRequestContext(request);
 
     if (role !== "student") {
       return NextResponse.json({ error: "Only students can create certificates." }, { status: 403 });
@@ -77,7 +78,9 @@ export async function POST(request: Request) {
       cgpa
     };
 
-    const { data, error } = await supabase
+    const adminSupabase = createSupabaseServiceClient();
+
+    const { data, error } = await adminSupabase
       .from("certificates")
       .insert(payload)
       .select(

@@ -53,12 +53,12 @@ export default function SidebarNav({
             return (
               <a
                 className={cn(
-                  "group flex items-center gap-3 rounded-2xl px-3 py-3.5 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-slate-950 hover:shadow-[0_16px_30px_-24px_rgba(15,23,42,0.4)] dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white"
+                  "group flex items-center gap-3 rounded-2xl px-3 py-3.5 text-sm font-medium text-slate-300 transition hover:bg-slate-900 hover:text-white hover:shadow-[0_16px_30px_-24px_rgba(15,23,42,0.4)]"
                 )}
                 href={item.href}
                 key={item.href}
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 transition group-hover:bg-sky-100 group-hover:text-sky-700 dark:bg-slate-900 dark:text-slate-300 dark:group-hover:bg-sky-500/10 dark:group-hover:text-sky-300">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-slate-300 transition group-hover:bg-sky-500/10 group-hover:text-sky-300">
                   <Icon className="h-5 w-5" />
                 </span>
                 {item.label}
@@ -68,16 +68,16 @@ export default function SidebarNav({
         </nav>
       </div>
 
-      <div className="rounded-[1.75rem] border border-sky-100 bg-gradient-to-br from-white to-sky-50/80 p-4 text-slate-900 shadow-[0_20px_36px_-30px_rgba(14,165,233,0.45)] dark:border-slate-800 dark:from-slate-950 dark:to-slate-900 dark:text-white">
+      <div className="rounded-[1.75rem] border border-slate-800 bg-gradient-to-br from-slate-950 to-slate-900 p-4 text-white shadow-[0_20px_36px_-30px_rgba(14,165,233,0.28)]">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-500/12">
-            <Blocks className="h-5 w-5 text-sky-600 dark:text-sky-300" />
+            <Blocks className="h-5 w-5 text-sky-300" />
           </span>
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-sky-700 dark:text-sky-300">
+            <p className="text-xs uppercase tracking-[0.24em] text-sky-300">
               Backend Signing
             </p>
-            <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">
+            <p className="mt-1 text-sm leading-6 text-slate-300">
               Private key stays on the server. Users never touch MetaMask.
             </p>
           </div>
