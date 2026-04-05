@@ -9,7 +9,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export function createSupabaseServerClient(accessToken?: string) {
-  return createClient(supabaseUrl, supabaseAnonKey, {
+  const url = supabaseUrl as string;
+  const anonKey = supabaseAnonKey as string;
+
+  return createClient(url, anonKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false

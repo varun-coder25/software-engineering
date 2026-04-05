@@ -367,7 +367,7 @@ export default function CertificateUpload({
             <div className="surface-panel rounded-2xl p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Review flow</p>
               <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">
-                Student upload -> Admin review -> Blockchain store -> Verified employer view
+                Student upload {"->"} Admin review {"->"} Blockchain store {"->"} Verified employer view
               </p>
             </div>
             <div className="surface-panel rounded-2xl p-4">

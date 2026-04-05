@@ -65,17 +65,20 @@ export default function DashboardLayout({
 
             <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-1">
               {highlights.map((highlight) => (
-              <Card className="min-w-0 transition-transform duration-300 hover:-translate-y-1" key={highlight.title}>
-                <CardHeader>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600 dark:text-sky-300">
-                    {highlight.label}
-                  </p>
-                  <CardTitle className="text-2xl">{highlight.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                  {highlight.description}
-                </CardContent>
-              </Card>
+                <Card
+                  className="min-w-0 transition-transform duration-300 hover:-translate-y-1"
+                  key={highlight.title}
+                >
+                  <CardHeader>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600 dark:text-sky-300">
+                      {highlight.label}
+                    </p>
+                    <CardTitle className="text-2xl">{highlight.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-0 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                    {highlight.description}
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </section>
