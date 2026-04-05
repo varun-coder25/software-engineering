@@ -1,61 +1,88 @@
 import type { ReactNode } from "react";
 import Navbar from "@/components/Navbar";
+import SidebarNav, { type SidebarNavItem } from "@/components/SidebarNav";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type DashboardLayoutProps = {
   email?: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  navItems: SidebarNavItem[];
+  highlights?: {
+    label: string;
+    title: string;
+    description: string;
+  }[];
   children: ReactNode;
 };
 
 export default function DashboardLayout({
   email,
+  eyebrow,
+  title,
+  description,
+  navItems,
+  highlights = [
+    {
+      label: "Certificate Layer",
+      title: "SHA-256 + Sepolia",
+      description:
+        "Upload a file, generate a cryptographic hash in the browser, and store it from secure API routes signed by a backend wallet."
+    },
+    {
+      label: "Student Tools",
+      title: "GPA + CGPA preserved",
+      description:
+        "Existing VIT calculators stay intact while the UI shifts to a cleaner, more product-like control surface."
+    }
+  ],
   children
 }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen">
-      <Navbar email={email} />
-      <main className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <section className="glass-panel overflow-hidden p-6 sm:p-8">
-          <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="space-y-4">
-              <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-blue-700">
-                Student Workspace
-              </span>
-              <div className="space-y-3">
-                <h2 className="font-[family-name:var(--font-serif)] text-3xl text-slate-900 sm:text-4xl">
-                  Manage certificates and track academic performance in one place.
-                </h2>
-                <p className="max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-                  This dashboard is structured for the current student workflow
-                  and ready for future additions like blockchain-backed
-                  verification, employer access, and administrator review.
-                </p>
-              </div>
-            </div>
+    <div className="min-h-screen px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-[1440px] gap-6">
+        <SidebarNav navItems={navItems} />
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-              <div className="rounded-[1.75rem] bg-slate-900 p-5 text-white">
-                <p className="text-xs uppercase tracking-[0.2em] text-blue-200">
-                  Current Module
-                </p>
-                <p className="mt-2 text-xl font-semibold">
-                  Certificate upload + GPA tools
-                </p>
-              </div>
-              <div className="rounded-[1.75rem] border border-blue-100 bg-blue-50 p-5">
-                <p className="text-xs uppercase tracking-[0.2em] text-blue-700">
-                  Next-ready Architecture
-                </p>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  Swap browser-only uploads with Supabase Storage when the
-                  document pipeline is ready.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <main className="min-w-0 flex-1 space-y-6">
+          <Navbar email={email} />
 
-        {children}
-      </main>
+          <section className="overview-grid" id="overview">
+            <Card className="min-w-0 overflow-hidden border-sky-100/60 bg-gradient-to-br from-white via-sky-50/80 to-indigo-50/60 dark:border-slate-800 dark:from-slate-950/80 dark:via-slate-950/75 dark:to-slate-900/75">
+              <CardHeader className="space-y-4">
+                <Badge className="w-fit" variant="default">
+                  {eyebrow}
+                </Badge>
+                <CardTitle className="max-w-3xl font-[family-name:var(--font-serif)] text-3xl leading-tight sm:text-4xl">
+                  {title}
+                </CardTitle>
+                <p className="max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-400">
+                  {description}
+                </p>
+              </CardHeader>
+            </Card>
+
+            <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-1">
+              {highlights.map((highlight) => (
+              <Card className="min-w-0 transition-transform duration-300 hover:-translate-y-1" key={highlight.title}>
+                <CardHeader>
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sky-600 dark:text-sky-300">
+                    {highlight.label}
+                  </p>
+                  <CardTitle className="text-2xl">{highlight.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  {highlight.description}
+                </CardContent>
+              </Card>
+              ))}
+            </div>
+          </section>
+
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

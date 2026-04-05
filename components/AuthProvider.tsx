@@ -10,15 +10,20 @@ import {
 } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabaseClient";
+import { getDashboardRoute, normalizeRole, type AppRole } from "@/lib/roles";
 
 type AuthContextValue = {
   session: Session | null;
   isLoading: boolean;
+  role: AppRole;
+  dashboardRoute: string;
 };
 
 const AuthContext = createContext<AuthContextValue>({
   session: null,
-  isLoading: true
+  isLoading: true,
+  role: "student",
+  dashboardRoute: "/dashboard/student"
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -59,7 +64,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       session,
-      isLoading
+      isLoading,
+      role: normalizeRole(session?.user.user_metadata?.role),
+      dashboardRoute: getDashboardRoute(
+        normalizeRole(session?.user.user_metadata?.role)
+      )
     }),
     [isLoading, session]
   );

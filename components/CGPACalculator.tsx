@@ -1,14 +1,24 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { GraduationCap, RotateCcw } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
-const initialSemesters = Array.from({ length: 8 }, (_, index) => ({
-  id: index + 1,
-  value: ""
-}));
+const createInitialSemesters = () =>
+  Array.from({ length: 8 }, (_, index) => ({
+    id: index + 1,
+    value: ""
+  }));
 
-export default function CGPACalculator() {
-  const [semesters, setSemesters] = useState(initialSemesters);
+export default function CGPACalculator({
+  onValueChange
+}: {
+  onValueChange?: (value: number) => void;
+}) {
+  const [semesters, setSemesters] = useState(createInitialSemesters);
 
   const { cgpa, enteredSemesters, validationError } = useMemo(() => {
     const activeValues = semesters
@@ -46,69 +56,78 @@ export default function CGPACalculator() {
   };
 
   const resetSemesters = () => {
-    setSemesters(initialSemesters);
+    setSemesters(createInitialSemesters());
   };
 
+  useEffect(() => {
+    onValueChange?.(Number(cgpa));
+  }, [cgpa, onValueChange]);
+
   return (
-    <section className="glass-panel p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-700">
-            CGPA Summary
-          </p>
-          <h3 className="mt-2 text-2xl font-semibold text-slate-900">
-            CGPA Calculator
-          </h3>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-            Average semester GPAs across up to eight semesters to estimate your
-            cumulative performance.
-          </p>
-        </div>
+    <section className="space-y-6" id="cgpa">
+      <Card className="min-w-0">
+        <CardHeader className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+          <div className="space-y-3">
+            <Badge variant="secondary">CGPA Calculator</Badge>
+            <CardTitle className="text-2xl sm:text-3xl">Aggregate up to eight semesters</CardTitle>
+            <p className="max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-400">
+              Enter semester GPA values from 0 to 10 and compute the cumulative
+              average instantly.
+            </p>
+          </div>
 
-        <div className="rounded-[1.5rem] border border-indigo-100 bg-indigo-50 px-5 py-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-indigo-700">Calculated CGPA</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-900">{cgpa}</p>
-          <p className="mt-1 text-sm text-slate-600">
-            Based on {enteredSemesters} semester{enteredSemesters === 1 ? "" : "s"}
-          </p>
-        </div>
-      </div>
+          <div className="surface-panel rounded-[1.75rem] px-5 py-4">
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Calculated CGPA</p>
+            <p className="mt-2 text-4xl font-semibold text-slate-950 dark:text-white">{cgpa}</p>
+            <p className="mt-1 text-sm text-slate-500">
+              Based on {enteredSemesters} semester{enteredSemesters === 1 ? "" : "s"}
+            </p>
+          </div>
+        </CardHeader>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {semesters.map((semester) => (
-          <label
-            className="rounded-[1.5rem] border border-slate-200 bg-white p-4"
-            key={semester.id}
-          >
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-              Semester {semester.id}
-            </span>
-            <input
-              className="field mt-3"
-              inputMode="decimal"
-              max="10"
-              min="0"
-              placeholder="0.00 - 10.00"
-              step="0.01"
-              type="number"
-              value={semester.value}
-              onChange={(event) => updateSemester(semester.id, event.target.value)}
-            />
-          </label>
-        ))}
-      </div>
+        <CardContent className="space-y-5">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {semesters.map((semester) => (
+              <div className="surface-panel min-w-0 rounded-[1.5rem] p-4 transition-transform duration-300 hover:-translate-y-1" key={semester.id}>
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4 text-indigo-500" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    Semester {semester.id}
+                  </span>
+                </div>
+                <Input
+                  className="mt-4"
+                  inputMode="decimal"
+                  max="10"
+                  min="0"
+                  placeholder="0.00 - 10.00"
+                  step="0.01"
+                  type="number"
+                  value={semester.value}
+                  onChange={(event) => updateSemester(semester.id, event.target.value)}
+                />
+              </div>
+            ))}
+          </div>
 
-      <div className="mt-5 flex justify-end">
-        <button className="button-secondary" onClick={resetSemesters} type="button">
-          Reset semesters
-        </button>
-      </div>
+          <div className="flex justify-end">
+            <Button variant="outline" onClick={resetSemesters}>
+              <RotateCcw className="h-4 w-4" />
+              Reset semesters
+            </Button>
+          </div>
 
-      {validationError ? (
-        <p className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          {validationError}
-        </p>
-      ) : null}
+          {validationError ? (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
+              {validationError}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm text-indigo-700 dark:border-indigo-500/20 dark:bg-indigo-500/10 dark:text-indigo-300">
+              CGPA rounds to two decimal places and updates live as you type.
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </section>
   );
 }

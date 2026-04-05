@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthShell from "@/components/AuthShell";
 import { useAuth } from "@/components/AuthProvider";
+import { getDashboardRoute, normalizeRole } from "@/lib/roles";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { session, isLoading } = useAuth();
+  const { session, isLoading, dashboardRoute } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,9 +19,9 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (!isLoading && session) {
-      router.replace("/dashboard");
+      router.replace(dashboardRoute);
     }
-  }, [isLoading, router, session]);
+  }, [dashboardRoute, isLoading, router, session]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,7 +29,7 @@ export default function LoginForm() {
     setSuccess("");
     setSubmitting(true);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password
     });
@@ -41,7 +42,7 @@ export default function LoginForm() {
     }
 
     setSuccess("Login successful. Redirecting to your dashboard...");
-    router.replace("/dashboard");
+    router.replace(getDashboardRoute(normalizeRole(data.user?.user_metadata?.role)));
   };
 
   return (

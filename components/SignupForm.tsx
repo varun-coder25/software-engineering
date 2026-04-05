@@ -4,23 +4,25 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import AuthShell from "@/components/AuthShell";
 import { useAuth } from "@/components/AuthProvider";
+import { APP_ROLES, getDashboardRoute, getRoleLabel, normalizeRole, type AppRole } from "@/lib/roles";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function SignupForm() {
   const router = useRouter();
-  const { session, isLoading } = useAuth();
+  const { session, isLoading, dashboardRoute } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState<AppRole>("student");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!isLoading && session) {
-      router.replace("/dashboard");
+      router.replace(dashboardRoute);
     }
-  }, [isLoading, router, session]);
+  }, [dashboardRoute, isLoading, router, session]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,15 +37,25 @@ export default function SignupForm() {
     setError("");
     setSuccess("");
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
-      password
+      password,
+      options: {
+        data: {
+          role
+        }
+      }
     });
 
     setSubmitting(false);
 
     if (signUpError) {
       setError(signUpError.message);
+      return;
+    }
+
+    if (data.session) {
+      router.replace(getDashboardRoute(normalizeRole(data.user?.user_metadata?.role)));
       return;
     }
 
@@ -77,6 +89,24 @@ export default function SignupForm() {
             onChange={(event) => setEmail(event.target.value)}
             required
           />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-slate-700" htmlFor="role">
+            Role
+          </label>
+          <select
+            id="role"
+            className="field"
+            value={role}
+            onChange={(event) => setRole(event.target.value as AppRole)}
+          >
+            {APP_ROLES.map((roleOption) => (
+              <option key={roleOption} value={roleOption}>
+                {getRoleLabel(roleOption)}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="space-y-2">

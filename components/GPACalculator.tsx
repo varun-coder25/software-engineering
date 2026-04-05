@@ -1,6 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Calculator, RotateCcw } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 const grades = [
   { label: "S", points: 10 },
@@ -19,15 +24,20 @@ type Subject = {
   grade: string;
 };
 
-const initialSubjects: Subject[] = Array.from({ length: 6 }, (_, index) => ({
-  id: index + 1,
-  name: "",
-  credits: "",
-  grade: ""
-}));
+const createInitialSubjects = (): Subject[] =>
+  Array.from({ length: 6 }, (_, index) => ({
+    id: index + 1,
+    name: "",
+    credits: "",
+    grade: ""
+  }));
 
-export default function GPACalculator() {
-  const [subjects, setSubjects] = useState(initialSubjects);
+export default function GPACalculator({
+  onValueChange
+}: {
+  onValueChange?: (value: number) => void;
+}) {
+  const [subjects, setSubjects] = useState(createInitialSubjects);
 
   const { gpa, totalCredits, validationError, completedSubjects } = useMemo(() => {
     let earnedPoints = 0;
@@ -82,91 +92,105 @@ export default function GPACalculator() {
   };
 
   const resetSubjects = () => {
-    setSubjects(initialSubjects);
+    setSubjects(createInitialSubjects());
   };
 
+  useEffect(() => {
+    onValueChange?.(Number(gpa));
+  }, [gpa, onValueChange]);
+
   return (
-    <section className="glass-panel p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-700">
-            Module 2
-          </p>
-          <h3 className="mt-2 text-2xl font-semibold text-slate-900">
-            GPA Calculator
-          </h3>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-            Calculate VIT-standard GPA across up to six subjects using credits
-            and grade points.
-          </p>
-        </div>
+    <section className="space-y-6" id="gpa">
+      <Card className="min-w-0">
+        <CardHeader className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+          <div className="space-y-3">
+            <Badge variant="default">GPA Calculator</Badge>
+            <CardTitle className="text-2xl sm:text-3xl">VIT grading system, up to six subjects</CardTitle>
+            <p className="max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-400">
+              Enter subject name, credits, and the VIT letter grade to compute
+              GPA automatically using weighted grade points.
+            </p>
+          </div>
 
-        <div className="rounded-[1.5rem] border border-blue-100 bg-blue-50 px-5 py-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-blue-700">Calculated GPA</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-900">{gpa}</p>
-          <p className="mt-1 text-sm text-slate-600">
-            {totalCredits} total credits across {completedSubjects} active subjects
-          </p>
-        </div>
-      </div>
+          <div className="surface-panel rounded-[1.75rem] px-5 py-4">
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Calculated GPA</p>
+            <p className="mt-2 text-4xl font-semibold text-slate-950 dark:text-white">{gpa}</p>
+            <p className="mt-1 text-sm text-slate-500">
+              {totalCredits} credits across {completedSubjects} active subjects
+            </p>
+          </div>
+        </CardHeader>
 
-      <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white">
-        <div className="grid grid-cols-[1.3fr_0.5fr_0.7fr] gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-          <span>Subject</span>
-          <span>Credits</span>
-          <span>Grade</span>
-        </div>
-
-        <div className="divide-y divide-slate-100">
-          {subjects.map((subject, index) => (
-            <div className="grid grid-cols-1 gap-3 px-4 py-4 sm:grid-cols-[1.3fr_0.5fr_0.7fr]" key={subject.id}>
-              <input
-                className="field"
-                placeholder={`Subject ${index + 1}`}
-                type="text"
-                value={subject.name}
-                onChange={(event) => updateSubject(subject.id, "name", event.target.value)}
-              />
-              <input
-                className="field"
-                inputMode="decimal"
-                min="0"
-                placeholder="Credits"
-                type="number"
-                value={subject.credits}
-                onChange={(event) => updateSubject(subject.id, "credits", event.target.value)}
-              />
-              <select
-                className="field"
-                value={subject.grade}
-                onChange={(event) => updateSubject(subject.id, "grade", event.target.value)}
-              >
-                <option value="">Select grade</option>
-                {grades.map((grade) => (
-                  <option key={grade.label} value={grade.label}>
-                    {grade.label} ({grade.points})
-                  </option>
-                ))}
-              </select>
+        <CardContent className="space-y-5">
+          <div className="overflow-hidden rounded-[1.75rem] border border-slate-200/70 dark:border-slate-800">
+            <div className="grid grid-cols-[1.3fr_0.5fr_0.7fr] gap-3 border-b border-slate-200/70 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:border-slate-800 dark:bg-slate-900/80">
+              <span>Subject</span>
+              <span>Credits</span>
+              <span>Grade</span>
             </div>
-          ))}
-        </div>
-      </div>
 
-      <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-slate-600">
-          Grade scale: S=10, A=9, B=8, C=7, D=6, E=5, F=0
-        </div>
-        <button className="button-secondary" onClick={resetSubjects} type="button">
-          Reset subjects
-        </button>
-      </div>
+            <div className="divide-y divide-slate-100 dark:divide-slate-900">
+              {subjects.map((subject, index) => (
+                <div
+                  className="grid grid-cols-1 gap-3 bg-white/60 px-4 py-4 dark:bg-slate-950/30 sm:grid-cols-[1.3fr_0.5fr_0.7fr]"
+                  key={subject.id}
+                >
+                  <Input
+                    placeholder={`Subject ${index + 1}`}
+                    type="text"
+                    value={subject.name}
+                    onChange={(event) => updateSubject(subject.id, "name", event.target.value)}
+                  />
+                  <Input
+                    inputMode="decimal"
+                    min="0"
+                    placeholder="Credits"
+                    type="number"
+                    value={subject.credits}
+                    onChange={(event) => updateSubject(subject.id, "credits", event.target.value)}
+                  />
+                  <select
+                    className="field"
+                    value={subject.grade}
+                    onChange={(event) => updateSubject(subject.id, "grade", event.target.value)}
+                  >
+                    <option value="">Select grade</option>
+                    {grades.map((grade) => (
+                      <option key={grade.label} value={grade.label}>
+                        {grade.label} ({grade.points})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          </div>
 
-      {validationError ? (
-        <p className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          {validationError}
-        </p>
-      ) : null}
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            <div className="surface-panel rounded-2xl px-5 py-4 text-sm text-slate-600 dark:text-slate-400">
+              Grade scale: S=10, A=9, B=8, C=7, D=6, E=5, F=0
+            </div>
+
+            <Button variant="outline" onClick={resetSubjects}>
+              <RotateCcw className="h-4 w-4" />
+              Reset subjects
+            </Button>
+          </div>
+
+          {validationError ? (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
+              {validationError}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300">
+              <div className="flex items-center gap-2">
+                <Calculator className="h-4 w-4" />
+                GPA updates automatically as you edit each row.
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </section>
   );
 }

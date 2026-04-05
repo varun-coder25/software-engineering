@@ -4,13 +4,42 @@
 
 :root {
   color-scheme: light;
+  --background: 228 100% 99%;
+  --foreground: 222 47% 11%;
+  --muted: 220 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --border: 214 32% 91%;
+  --primary: 199 89% 48%;
+  --primary-foreground: 0 0% 100%;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: 222 47% 7%;
+  --foreground: 210 40% 98%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  --card: 222 47% 9%;
+  --card-foreground: 210 40% 98%;
+  --border: 217 33% 17%;
+  --primary: 199 89% 60%;
+  --primary-foreground: 222 47% 11%;
 }
 
 body {
-  @apply min-h-screen bg-slate-950 text-slate-900 antialiased;
+  @apply min-h-screen antialiased transition-colors;
   background:
-    radial-gradient(circle at top, rgba(147, 197, 253, 0.35), transparent 30%),
-    linear-gradient(180deg, #eff6ff 0%, #f8fbff 42%, #e8eefb 100%);
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.26), transparent 32%),
+    linear-gradient(180deg, #f5fbff 0%, #edf5ff 45%, #dde9fb 100%);
+  color: hsl(var(--foreground));
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at top, rgba(14, 165, 233, 0.16), transparent 28%),
+    linear-gradient(180deg, #07111f 0%, #091423 48%, #0f172a 100%);
 }
 
 ::selection {
@@ -18,11 +47,16 @@ body {
 }
 
 .glass-panel {
-  @apply rounded-3xl border border-white/70 bg-white/85 shadow-panel backdrop-blur;
+  @apply rounded-3xl border shadow-panel backdrop-blur;
+  border-color: hsl(var(--border) / 0.85);
+  background-color: hsl(var(--card) / 0.82);
 }
 
 .field {
-  @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100;
+  @apply w-full rounded-2xl border px-4 py-3 text-sm outline-none transition focus:ring-4;
+  border-color: hsl(var(--border));
+  background-color: hsl(var(--card) / 0.9);
+  color: hsl(var(--foreground));
 }
 
 .button-primary {
@@ -31,4 +65,16 @@ body {
 
 .button-secondary {
   @apply inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-200 hover:text-blue-700;
+}
+
+.dashboard-grid {
+  @apply grid gap-6 2xl:grid-cols-[1.15fr_0.85fr];
+}
+
+.surface-panel {
+  @apply rounded-3xl border border-white/60 bg-white/70 backdrop-blur dark:border-slate-800 dark:bg-slate-950/60;
+}
+
+.overview-grid {
+  @apply grid gap-6 2xl:grid-cols-[1.25fr_0.75fr];
 }

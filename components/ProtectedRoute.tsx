@@ -3,16 +3,28 @@
 import { useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
+import type { AppRole } from "@/lib/roles";
 
-export default function ProtectedRoute({ children }: { children: ReactNode }) {
+export default function ProtectedRoute({
+  children,
+  allowedRoles
+}: {
+  children: ReactNode;
+  allowedRoles?: AppRole[];
+}) {
   const router = useRouter();
-  const { session, isLoading } = useAuth();
+  const { session, isLoading, role, dashboardRoute } = useAuth();
 
   useEffect(() => {
     if (!isLoading && !session) {
       router.replace("/login");
+      return;
     }
-  }, [isLoading, router, session]);
+
+    if (!isLoading && session && allowedRoles && !allowedRoles.includes(role)) {
+      router.replace(dashboardRoute);
+    }
+  }, [allowedRoles, dashboardRoute, isLoading, role, router, session]);
 
   if (isLoading) {
     return (
@@ -25,6 +37,10 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
   }
 
   if (!session) {
+    return null;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(role)) {
     return null;
   }
 

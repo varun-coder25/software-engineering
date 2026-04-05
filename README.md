@@ -1,115 +1,87 @@
-# VIT Academic Certificate & GPA Portal
+# VIT Academic Certificate Verification System
 
-A frontend-focused academic portal built with Next.js App Router, React, Tailwind CSS, and Supabase Authentication. The current version provides:
+This project upgrades the original portal into a role-based academic verification platform with:
 
-- Email signup, login, logout, and session persistence with Supabase
-- Protected student dashboard routing
-- Certificate upload UI with drag-and-drop, preview, and removable browser-state storage
-- VIT GPA calculator for up to 6 subjects
-- CGPA calculator for up to 8 semesters
-- Structure ready for future blockchain verification, admin tooling, employer access, and Supabase Storage integration
+- Supabase authentication with `student`, `admin`, and `employer` roles
+- role-aware dashboards at `/dashboard/student`, `/dashboard/admin`, and `/dashboard/employer`
+- student certificate submissions with local SHA-256 hashing
+- admin approval and rejection workflow
+- server-side blockchain storage on Sepolia through Next.js API routes
+- employer-facing verified certificate lookup with Etherscan proof links
+- VIT GPA and CGPA calculators retained inside the student workflow
 
-## Tech Stack
+## Required Environment Variables
 
-- Next.js (App Router)
-- React
-- Tailwind CSS
-- Supabase JavaScript client
-
-## Environment Variables
-
-Create a `.env.local` file with:
+Create `.env.local` with:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://npnjnhdajfjqunfvzith.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_PUBLISHABLE_KEY
+PRIVATE_KEY=your_wallet_private_key
+RPC_URL=https://sepolia.infura.io/v3/YOUR_KEY
 ```
 
-## Local Development
+## Supabase Setup
 
-1. Install dependencies:
+1. Create the `certificates` table by running [certificates.sql](/C:/Users/varun/OneDrive/Desktop/Blockchain%20Stuff/software%20engineering/supabase/certificates.sql).
+2. Keep user roles in Supabase auth `user_metadata.role`.
+3. Make sure signup users choose one of:
+   - `student`
+   - `admin`
+   - `employer`
+4. If email confirmation is enabled, confirm the email before first login.
+
+## Role Flows
+
+### Student
+
+- Upload certificate
+- Generate SHA-256 hash
+- Create `PENDING` certificate record
+- View certificate history and status
+- Use GPA and CGPA calculators
+
+### Admin
+
+- View all student submissions
+- Approve or reject pending records
+- On approve, call `POST /api/blockchain/store`
+- Persist `tx_hash`, `block_number`, and `timestamp`
+
+### Employer
+
+- Search verified student certificates
+- View institution verification status
+- Open Sepolia transaction and block proof links
+
+## API Routes
+
+- `POST /api/certificates`
+- `GET /api/certificates`
+- `PATCH /api/certificates/:id/status`
+- `POST /api/blockchain/store`
+- `GET /api/blockchain/verify?hash=...`
+
+## Blockchain Notes
+
+- Contract address and full ABI live in [blockchain.ts](/C:/Users/varun/OneDrive/Desktop/Blockchain%20Stuff/software%20engineering/lib/blockchain.ts).
+- Hashes are normalized to `bytes32` before contract calls.
+- The private key is used only on the server and never exposed to the client.
+
+## Install / Run
 
 ```bash
 npm install
-```
-
-2. Start the development server:
-
-```bash
 npm run dev
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000)
+## Vercel Deployment
 
-## Supabase Setup Notes
+1. Import the repository into Vercel.
+2. Add all four environment variables in Project Settings.
+3. Redeploy after any env change.
+4. In Supabase `Authentication -> URL Configuration`, include your deployed domain.
 
-- This app uses `supabase.auth.signUp()`, `supabase.auth.signInWithPassword()`, and `supabase.auth.signOut()`.
-- Session persistence is enabled in the reusable client at [lib/supabaseClient.ts](/C:/Users/varun/OneDrive/Desktop/Blockchain%20Stuff/software%20engineering/lib/supabaseClient.ts).
-- If email confirmation is enabled in your Supabase project, users must confirm their email before login.
+## Important
 
-## Deployment on Vercel
-
-1. Push this project to a Git repository.
-2. Import the repository into Vercel, or deploy from the CLI.
-3. Add these environment variables in Vercel Project Settings:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://npnjnhdajfjqunfvzith.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_PUBLISHABLE_KEY
-```
-
-4. Run a production deployment:
-
-```bash
-vercel deploy
-```
-
-5. For a production-ready deployment to the main domain, use:
-
-```bash
-vercel --prod
-```
-
-## Build Commands
-
-- Development: `npm run dev`
-- Production build: `npm run build`
-- Production server: `npm run start`
-
-## Project Structure
-
-```text
-app/
-  dashboard/
-  login/
-  signup/
-
-components/
-  AuthProvider.tsx
-  CertificateUpload.tsx
-  CGPACalculator.tsx
-  DashboardLayout.tsx
-  GPACalculator.tsx
-  LoginForm.tsx
-  Navbar.tsx
-  ProtectedRoute.tsx
-  SignupForm.tsx
-
-lib/
-  supabaseClient.ts
-```
-
-## Future Extension Points
-
-- Replace browser-only certificate state with Supabase Storage upload actions
-- Add blockchain certificate verification flows
-- Introduce admin verification and audit dashboards
-- Add an employer verification portal
-
-## Important Note
-
-The codebase is deployable, but a public live URL requires:
-
-- installing dependencies
-- configuring the real Supabase publishable key
-- deploying to Vercel from your account
+The database policies in [certificates.sql](/C:/Users/varun/OneDrive/Desktop/Blockchain%20Stuff/software%20engineering/supabase/certificates.sql) assume role data is present in the Supabase JWT under `user_metadata.role`.

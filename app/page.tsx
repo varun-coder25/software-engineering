@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 
 export default function HomePage() {
-  const { session, isLoading } = useAuth();
+  const { session, isLoading, dashboardRoute } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -13,8 +13,8 @@ export default function HomePage() {
       return;
     }
 
-    router.replace(session ? "/dashboard" : "/login");
-  }, [isLoading, router, session]);
+    router.replace(session ? dashboardRoute : "/login");
+  }, [dashboardRoute, isLoading, router, session]);
 
   return (
     <main className="flex min-h-screen items-center justify-center">
