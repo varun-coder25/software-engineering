@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 
 type AuthShellProps = {
+  eyebrow?: string;
   title: string;
   subtitle: string;
   footerLabel: string;
@@ -11,6 +12,7 @@ type AuthShellProps = {
 };
 
 export default function AuthShell({
+  eyebrow = "Student Access",
   title,
   subtitle,
   footerLabel,
@@ -70,7 +72,7 @@ export default function AuthShell({
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-sky-400" />
           <div className="space-y-2">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">
-              Student Access
+              {eyebrow}
             </p>
             <h2 className="font-[family-name:var(--font-serif)] text-3xl text-slate-900">
               {title}

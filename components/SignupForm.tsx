@@ -1,22 +1,55 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { BriefcaseBusiness, GraduationCap } from "lucide-react";
 import AuthShell from "@/components/AuthShell";
 import { useAuth } from "@/components/AuthProvider";
-import { APP_ROLES, getDashboardRoute, getRoleLabel, normalizeRole, type AppRole } from "@/lib/roles";
+import {
+  PUBLIC_SIGNUP_ROLES,
+  getDashboardRoute,
+  getRoleEyebrow,
+  getRoleLabel,
+  normalizeRole,
+  type PublicSignupRole
+} from "@/lib/roles";
 import { supabase } from "@/lib/supabaseClient";
+
+const signupRoles: {
+  role: PublicSignupRole;
+  description: string;
+  icon: typeof GraduationCap;
+}[] = [
+  {
+    role: "student",
+    description: "For students submitting certificates and using GPA tools.",
+    icon: GraduationCap
+  },
+  {
+    role: "employer",
+    description: "For recruiters viewing institution-verified student records.",
+    icon: BriefcaseBusiness
+  }
+];
 
 export default function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { session, isLoading, dashboardRoute } = useAuth();
+  const requestedRole = normalizeRole(searchParams.get("role"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState<AppRole>("student");
+  const [role, setRole] = useState<PublicSignupRole>(
+    requestedRole === "employer" ? "employer" : "student"
+  );
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    setRole(requestedRole === "employer" ? "employer" : "student");
+  }, [requestedRole]);
 
   useEffect(() => {
     if (!isLoading && session) {
@@ -69,13 +102,47 @@ export default function SignupForm() {
 
   return (
     <AuthShell
+      eyebrow={getRoleEyebrow(role)}
       title="Create your account"
-      subtitle="Set up secure access for certificate uploads and academic performance tools."
+      subtitle="Public signup is available for students and employers. Admin access is provisioned manually by the institution."
       footerLabel="Back to login"
       footerLink="/login"
       footerText="Already registered?"
     >
       <form className="space-y-5" onSubmit={handleSubmit}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {signupRoles.map(({ role: roleOption, description, icon: Icon }) => (
+            <button
+              key={roleOption}
+              className={`rounded-[1.5rem] border px-4 py-4 text-left transition ${
+                role === roleOption
+                  ? "border-blue-500 bg-blue-50 shadow-[0_18px_32px_-24px_rgba(37,99,235,0.45)]"
+                  : "border-slate-200 bg-white hover:border-blue-200 hover:bg-slate-50"
+              }`}
+              type="button"
+              onClick={() => setRole(roleOption)}
+            >
+              <span
+                className={`flex h-11 w-11 items-center justify-center rounded-2xl ${
+                  role === roleOption
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-100 text-slate-700"
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+              </span>
+              <p className="mt-4 text-sm font-semibold text-slate-900">
+                {getRoleLabel(roleOption)}
+              </p>
+              <p className="mt-2 text-xs leading-5 text-slate-600">{description}</p>
+            </button>
+          ))}
+        </div>
+
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Admin signup is disabled here. Create admin users directly in Supabase so only authorized college staff can access the admin dashboard.
+        </div>
+
         <div className="space-y-2">
           <label className="text-sm font-semibold text-slate-700" htmlFor="email">
             Email address
@@ -99,9 +166,9 @@ export default function SignupForm() {
             id="role"
             className="field"
             value={role}
-            onChange={(event) => setRole(event.target.value as AppRole)}
+            onChange={(event) => setRole(event.target.value as PublicSignupRole)}
           >
-            {APP_ROLES.map((roleOption) => (
+            {PUBLIC_SIGNUP_ROLES.map((roleOption) => (
               <option key={roleOption} value={roleOption}>
                 {getRoleLabel(roleOption)}
               </option>

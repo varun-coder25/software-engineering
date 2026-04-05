@@ -69,16 +69,19 @@ export default function StudentDashboard({ email }: { email?: string }) {
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="surface-panel rounded-3xl p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Pending</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-600">Pending</p>
           <p className="mt-3 text-4xl font-semibold text-slate-950 dark:text-white">{stats.pending}</p>
+          <p className="mt-2 text-sm text-slate-500">Awaiting institutional review.</p>
         </div>
         <div className="surface-panel rounded-3xl p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Verified</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-600">Verified</p>
           <p className="mt-3 text-4xl font-semibold text-slate-950 dark:text-white">{stats.verified}</p>
+          <p className="mt-2 text-sm text-slate-500">Approved and ready to prove.</p>
         </div>
         <div className="surface-panel rounded-3xl p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Rejected</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-600">Rejected</p>
           <p className="mt-3 text-4xl font-semibold text-slate-950 dark:text-white">{stats.rejected}</p>
+          <p className="mt-2 text-sm text-slate-500">Needs correction before approval.</p>
         </div>
       </div>
 

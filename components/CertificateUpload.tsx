@@ -222,8 +222,8 @@ export default function CertificateUpload({
           <div
             className={`rounded-[1.75rem] border-2 border-dashed p-6 transition-all ${
               isDragging
-                ? "border-sky-400 bg-sky-50/80 dark:bg-sky-500/10"
-                : "border-slate-300/80 bg-slate-50/80 dark:border-slate-800 dark:bg-slate-950/60"
+                ? "border-sky-400 bg-sky-50"
+                : "border-slate-200 bg-white/70 dark:border-slate-800 dark:bg-slate-950/60"
             }`}
             onDragEnter={(event) => {
               event.preventDefault();
@@ -290,8 +290,8 @@ export default function CertificateUpload({
                 </div>
 
                 <div className="mt-6 space-y-3">
-                  <div className="rounded-2xl bg-slate-950/95 p-4 text-slate-100 dark:bg-slate-900">
-                    <p className="text-xs uppercase tracking-[0.2em] text-sky-300">
+                  <div className="rounded-2xl border border-sky-100 bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 p-4 text-slate-100 shadow-[0_20px_40px_-34px_rgba(2,6,23,0.9)] dark:border-slate-800 dark:bg-slate-900">
+                    <p className="text-xs uppercase tracking-[0.2em] text-sky-200">
                       SHA-256 hash
                     </p>
                     <p className="mt-3 break-all font-mono text-xs leading-6 sm:text-sm">
