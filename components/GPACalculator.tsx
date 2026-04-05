@@ -106,7 +106,7 @@ export default function GPACalculator({
           <div className="space-y-3">
             <Badge variant="default">GPA Calculator</Badge>
             <CardTitle className="text-2xl sm:text-3xl">VIT grading system, up to six subjects</CardTitle>
-            <p className="max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-400">
+            <p className="max-w-2xl text-sm leading-7 text-slate-400">
               Enter subject name, credits, and the VIT letter grade to compute
               GPA automatically using weighted grade points.
             </p>
@@ -114,25 +114,25 @@ export default function GPACalculator({
 
           <div className="surface-panel rounded-[1.75rem] px-5 py-4">
             <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Calculated GPA</p>
-            <p className="mt-2 text-4xl font-semibold text-slate-950 dark:text-white">{gpa}</p>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-2 text-4xl font-semibold text-white">{gpa}</p>
+            <p className="mt-1 text-sm text-slate-400">
               {totalCredits} credits across {completedSubjects} active subjects
             </p>
           </div>
         </CardHeader>
 
         <CardContent className="space-y-5">
-          <div className="overflow-hidden rounded-[1.75rem] border border-slate-200/70 dark:border-slate-800">
-            <div className="grid grid-cols-[1.3fr_0.5fr_0.7fr] gap-3 border-b border-slate-200/70 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:border-slate-800 dark:bg-slate-900/80">
+          <div className="overflow-hidden rounded-[1.75rem] border border-slate-800">
+            <div className="grid grid-cols-[1.3fr_0.5fr_0.7fr] gap-3 border-b border-slate-800 bg-slate-900/80 px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
               <span>Subject</span>
               <span>Credits</span>
               <span>Grade</span>
             </div>
 
-            <div className="divide-y divide-slate-100 dark:divide-slate-900">
+            <div className="divide-y divide-slate-900">
               {subjects.map((subject, index) => (
                 <div
-                  className="grid grid-cols-1 gap-3 bg-white/60 px-4 py-4 dark:bg-slate-950/30 sm:grid-cols-[1.3fr_0.5fr_0.7fr]"
+                  className="grid grid-cols-1 gap-3 bg-slate-950/30 px-4 py-4 sm:grid-cols-[1.3fr_0.5fr_0.7fr]"
                   key={subject.id}
                 >
                   <Input
@@ -167,7 +167,7 @@ export default function GPACalculator({
           </div>
 
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-            <div className="surface-panel rounded-2xl px-5 py-4 text-sm text-slate-600 dark:text-slate-400">
+            <div className="surface-panel rounded-2xl px-5 py-4 text-sm text-slate-400">
               Grade scale: S=10, A=9, B=8, C=7, D=6, E=5, F=0
             </div>
 
@@ -178,11 +178,11 @@ export default function GPACalculator({
           </div>
 
           {validationError ? (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
+            <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-300">
               {validationError}
             </div>
           ) : (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300">
+            <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
               <div className="flex items-center gap-2">
                 <Calculator className="h-4 w-4" />
                 GPA updates automatically as you edit each row.

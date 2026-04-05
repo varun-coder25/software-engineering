@@ -44,30 +44,30 @@ export default function CertificatesTable({
 
   return (
     <section id="certificates">
-      <Card className="border-slate-200/80 bg-white/95 dark:border-slate-800 dark:bg-slate-950/88">
+      <Card className="border-slate-800 bg-slate-950/88">
         <CardHeader>
           <CardTitle className="text-2xl sm:text-3xl">{title}</CardTitle>
-          <p className="text-sm leading-7 text-slate-600 dark:text-slate-400">{description}</p>
+          <p className="text-sm leading-7 text-slate-400">{description}</p>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, index) => (
                 <div
-                  className="h-20 animate-pulse rounded-2xl border border-slate-200 bg-slate-100/80 dark:border-slate-800 dark:bg-slate-900"
+                  className="h-20 animate-pulse rounded-2xl border border-slate-800 bg-slate-900"
                   key={index}
                 />
               ))}
             </div>
           ) : certificates.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-slate-300 px-5 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+            <div className="rounded-2xl border border-dashed border-slate-800 px-5 py-8 text-center text-sm text-slate-400">
               {emptyText}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full border-separate border-spacing-y-3">
                 <thead>
-                  <tr className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  <tr className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
                     {role === "admin" || role === "employer" ? (
                       <th className="px-4">Student</th>
                     ) : null}
@@ -83,22 +83,22 @@ export default function CertificatesTable({
                 <tbody>
                   {certificates.map((certificate) => (
                     <tr
-                      className="rounded-2xl bg-slate-50/90 shadow-sm dark:bg-slate-900/70"
+                      className="rounded-2xl bg-slate-900/70 shadow-sm"
                       key={certificate.id}
                     >
                       {role === "admin" || role === "employer" ? (
-                        <td className="rounded-l-2xl px-4 py-4 text-sm text-slate-700 dark:text-slate-200">
+                        <td className="rounded-l-2xl px-4 py-4 text-sm text-slate-200">
                           <div className="font-medium">{certificate.student_email ?? "Unknown"}</div>
-                          <div className="text-xs text-slate-500 dark:text-slate-400">{certificate.user_id}</div>
+                          <div className="text-xs text-slate-400">{certificate.user_id}</div>
                         </td>
                       ) : null}
-                      <td className="px-4 py-4 text-sm text-slate-700 dark:text-slate-200">
+                      <td className="px-4 py-4 text-sm text-slate-200">
                         <div className="font-medium">{certificate.file_name ?? "Certificate record"}</div>
-                        <div className="text-xs text-slate-500 dark:text-slate-400">
+                        <div className="text-xs text-slate-400">
                           Preview available when storage is connected
                         </div>
                       </td>
-                      <td className="max-w-[220px] px-4 py-4 text-xs text-slate-600 dark:text-slate-300">
+                      <td className="max-w-[220px] px-4 py-4 text-xs text-slate-300">
                         <div className="break-all font-mono">{certificate.hash}</div>
                       </td>
                       <td className="px-4 py-4">
@@ -106,13 +106,13 @@ export default function CertificatesTable({
                           {certificate.status}
                         </Badge>
                       </td>
-                      <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">
+                      <td className="px-4 py-4 text-sm text-slate-300">
                         {certificate.status === "VERIFIED" && certificate.tx_hash ? (
                           <div className="space-y-2">
                             <Badge variant="success">Verified on Blockchain</Badge>
                             <div className="flex flex-col gap-2">
                               <Link
-                                className="inline-flex items-center gap-2 text-sky-600 hover:text-sky-700 dark:text-sky-300"
+                                className="inline-flex items-center gap-2 text-sky-300 hover:text-sky-200"
                                 href={`https://sepolia.etherscan.io/tx/${certificate.tx_hash}`}
                                 target="_blank"
                               >
@@ -120,7 +120,7 @@ export default function CertificatesTable({
                               </Link>
                               {certificate.block_number ? (
                                 <Link
-                                  className="inline-flex items-center gap-2 text-sky-600 hover:text-sky-700 dark:text-sky-300"
+                                  className="inline-flex items-center gap-2 text-sky-300 hover:text-sky-200"
                                   href={`https://sepolia.etherscan.io/block/${certificate.block_number}`}
                                   target="_blank"
                                 >
@@ -130,22 +130,22 @@ export default function CertificatesTable({
                             </div>
                           </div>
                         ) : certificate.status === "REJECTED" ? (
-                          <div className="inline-flex items-center gap-2 text-rose-600 dark:text-rose-300">
+                          <div className="inline-flex items-center gap-2 text-rose-300">
                             <ShieldX className="h-4 w-4" />
                             Rejected
                           </div>
                         ) : (
-                          <div className="inline-flex items-center gap-2 text-amber-600 dark:text-amber-300">
+                          <div className="inline-flex items-center gap-2 text-amber-300">
                             <ShieldCheck className="h-4 w-4" />
                             Awaiting admin action
                           </div>
                         )}
                       </td>
-                      <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">
+                      <td className="px-4 py-4 text-sm text-slate-300">
                         {new Date(certificate.created_at).toLocaleDateString()}
                       </td>
                       {role === "employer" ? (
-                        <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">
+                        <td className="px-4 py-4 text-sm text-slate-300">
                           <div>GPA: {formatScore(certificate.gpa)}</div>
                           <div>CGPA: {formatScore(certificate.cgpa)}</div>
                         </td>

@@ -189,7 +189,7 @@ export default function CertificateUpload({
             <CardTitle className="text-2xl sm:text-3xl">
               Upload now, route through admin verification
             </CardTitle>
-            <p className="max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-400">
+            <p className="max-w-2xl text-sm leading-7 text-slate-400">
               Student uploads create a pending record. Admin approval later
               stores the certificate hash on-chain and marks the submission as
               verified.
@@ -222,8 +222,8 @@ export default function CertificateUpload({
           <div
             className={`rounded-[1.75rem] border-2 border-dashed p-6 transition-all ${
               isDragging
-                ? "border-sky-400 bg-sky-50"
-                : "border-slate-200 bg-white/70 dark:border-slate-800 dark:bg-slate-950/60"
+                ? "border-sky-400 bg-sky-500/10"
+                : "border-slate-800 bg-slate-950/60"
             }`}
             onDragEnter={(event) => {
               event.preventDefault();
@@ -246,7 +246,7 @@ export default function CertificateUpload({
             />
 
             <div className="flex flex-col items-center justify-center gap-4 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-600 dark:text-sky-300">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-300">
                 {isHashing ? (
                   <LoaderCircle className="h-7 w-7 animate-spin" />
                 ) : (
@@ -254,10 +254,10 @@ export default function CertificateUpload({
                 )}
               </div>
               <div className="space-y-2">
-                <p className="text-xl font-semibold text-slate-950 dark:text-white">
+                <p className="text-xl font-semibold text-white">
                   Drop your certificate or choose a file
                 </p>
-                <p className="max-w-xl text-sm leading-6 text-slate-600 dark:text-slate-400">
+                <p className="max-w-xl text-sm leading-6 text-slate-400">
                   PDF, JPG, and PNG are supported. The app hashes the file
                   locally before creating a pending verification record.
                 </p>
@@ -276,7 +276,7 @@ export default function CertificateUpload({
                     <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
                       Selected file
                     </p>
-                    <p className="mt-2 break-all text-base font-semibold text-slate-900 dark:text-white">
+                    <p className="mt-2 break-all text-base font-semibold text-white">
                       {storedFile.file.name}
                     </p>
                     <p className="mt-2 text-sm text-slate-500">
@@ -304,7 +304,7 @@ export default function CertificateUpload({
                       <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
                         GPA Snapshot
                       </p>
-                      <p className="mt-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                      <p className="mt-2 text-sm font-medium text-slate-200">
                         {currentGpa.toFixed(2)}
                       </p>
                     </div>
@@ -312,7 +312,7 @@ export default function CertificateUpload({
                       <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
                         CGPA Snapshot
                       </p>
-                      <p className="mt-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                      <p className="mt-2 text-sm font-medium text-slate-200">
                         {currentCgpa.toFixed(2)}
                       </p>
                     </div>
@@ -343,7 +343,7 @@ export default function CertificateUpload({
                     src={storedFile.previewUrl}
                   />
                 ) : (
-                  <div className="mt-4 flex min-h-64 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/80 px-6 text-center text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/60 dark:text-slate-400">
+                  <div className="mt-4 flex min-h-64 items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-slate-950/60 px-6 text-center text-sm text-slate-400">
                     PDF selected. Preview remains lightweight until cloud storage
                     is connected.
                   </div>
@@ -358,7 +358,7 @@ export default function CertificateUpload({
                 <FileBadge2 className="h-5 w-5 text-sky-500" />
                 <div>
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Current hash</p>
-                  <p className="mt-1 break-all text-sm text-slate-700 dark:text-slate-300">
+                  <p className="mt-1 break-all text-sm text-slate-300">
                     {fileHash || "Generated after file selection"}
                   </p>
                 </div>
@@ -366,13 +366,13 @@ export default function CertificateUpload({
             </div>
             <div className="surface-panel rounded-2xl p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Review flow</p>
-              <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">
+              <p className="mt-3 text-sm text-slate-300">
                 Student upload {"->"} Admin review {"->"} Blockchain store {"->"} Verified employer view
               </p>
             </div>
             <div className="surface-panel rounded-2xl p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Upload state</p>
-              <div className="mt-3 flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+              <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
                 <CheckCircle2 className="h-4 w-4 text-sky-500" />
                 {message || "Awaiting file"}
               </div>
@@ -380,7 +380,7 @@ export default function CertificateUpload({
           </div>
 
           {error ? (
-            <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300">
+            <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
               {error}
             </div>
           ) : null}

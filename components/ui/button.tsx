@@ -10,11 +10,11 @@ const buttonVariants = cva(
         default:
           "bg-sky-500 text-white shadow-lg shadow-sky-500/25 hover:bg-sky-600",
         outline:
-          "border border-slate-200/80 bg-white/80 text-slate-700 hover:border-sky-200 hover:bg-sky-50 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:bg-slate-900",
+          "border border-slate-800 bg-slate-950/70 text-slate-200 hover:border-slate-700 hover:bg-slate-900",
         secondary:
-          "bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200",
+          "bg-slate-900 text-white hover:bg-slate-800",
         ghost:
-          "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white"
+          "text-slate-300 hover:bg-slate-900 hover:text-white"
       },
       size: {
         default: "h-10 px-4 py-2",
