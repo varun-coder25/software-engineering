@@ -44,7 +44,7 @@ export default function CertificatesTable({
 
   return (
     <section id="certificates">
-      <Card>
+      <Card className="border-slate-200/80 bg-white/95 dark:border-slate-800 dark:bg-slate-950/88">
         <CardHeader>
           <CardTitle className="text-2xl sm:text-3xl">{title}</CardTitle>
           <p className="text-sm leading-7 text-slate-600 dark:text-slate-400">{description}</p>
@@ -67,7 +67,7 @@ export default function CertificatesTable({
             <div className="overflow-x-auto">
               <table className="min-w-full border-separate border-spacing-y-3">
                 <thead>
-                  <tr className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  <tr className="text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                     {role === "admin" || role === "employer" ? (
                       <th className="px-4">Student</th>
                     ) : null}
@@ -83,18 +83,18 @@ export default function CertificatesTable({
                 <tbody>
                   {certificates.map((certificate) => (
                     <tr
-                      className="rounded-2xl bg-white shadow-sm dark:bg-slate-950/70"
+                      className="rounded-2xl bg-slate-50/90 shadow-sm dark:bg-slate-900/70"
                       key={certificate.id}
                     >
                       {role === "admin" || role === "employer" ? (
                         <td className="rounded-l-2xl px-4 py-4 text-sm text-slate-700 dark:text-slate-200">
                           <div className="font-medium">{certificate.student_email ?? "Unknown"}</div>
-                          <div className="text-xs text-slate-500">{certificate.user_id}</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400">{certificate.user_id}</div>
                         </td>
                       ) : null}
                       <td className="px-4 py-4 text-sm text-slate-700 dark:text-slate-200">
                         <div className="font-medium">{certificate.file_name ?? "Certificate record"}</div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-slate-500 dark:text-slate-400">
                           Preview available when storage is connected
                         </div>
                       </td>

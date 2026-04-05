@@ -18,24 +18,31 @@ export type SidebarNavItem = {
   label: keyof typeof DASHBOARD_ICONS;
 };
 
-export default function SidebarNav({
-  navItems
-}: {
+type SidebarNavProps = {
   navItems: SidebarNavItem[];
-}) {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+};
+
+export default function SidebarNav({
+  navItems,
+  eyebrow = "Student Workspace",
+  title = "Verify records with a cleaner workflow.",
+  description = "Keep uploads, grade tools, and blockchain status in one calm, student-friendly control panel."
+}: SidebarNavProps) {
   return (
     <aside className="surface-panel hidden h-[calc(100vh-2rem)] w-[280px] shrink-0 flex-col justify-between overflow-hidden p-6 xl:flex">
       <div className="space-y-8">
         <div className="rounded-[2rem] bg-gradient-to-br from-slate-900 via-slate-800 to-sky-950 px-6 py-7 text-white shadow-[0_30px_60px_-40px_rgba(2,6,23,0.8)]">
           <p className="text-xs font-semibold uppercase tracking-[0.34em] text-sky-200/90">
-            Student Workspace
+            {eyebrow}
           </p>
           <h2 className="mt-4 font-[family-name:var(--font-serif)] text-[2rem] leading-tight text-white">
-            Verify records with a cleaner workflow.
+            {title}
           </h2>
           <p className="mt-4 text-sm leading-7 text-slate-200/88">
-            Keep uploads, grade tools, and blockchain status in one calm,
-            student-friendly control panel.
+            {description}
           </p>
         </div>
 

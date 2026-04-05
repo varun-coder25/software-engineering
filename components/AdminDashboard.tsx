@@ -129,6 +129,11 @@ export default function AdminDashboard({ email }: { email?: string }) {
       eyebrow="Admin Control Room"
       title="Review student submissions and approve institution-backed records."
       description="Approvals are the only trigger that writes certificate hashes on-chain. Rejections keep the academic workflow explicit and auditable."
+      navbarEyebrow="Admin Control Room"
+      navbarTitle="Institution Review and Blockchain Approval Portal"
+      sidebarEyebrow="Admin Workspace"
+      sidebarTitle="Review, approve, and finalize verified records."
+      sidebarDescription="Institution staff control the approval queue, rejection flow, and blockchain write boundary from one administrative console."
       navItems={[
         { href: "#overview", label: "Dashboard" },
         { href: "#certificates", label: "Certificates" }
@@ -152,16 +157,19 @@ export default function AdminDashboard({ email }: { email?: string }) {
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="surface-panel rounded-3xl p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Pending approvals</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-600">Pending approvals</p>
           <p className="mt-3 text-4xl font-semibold text-slate-950 dark:text-white">{metrics.pending}</p>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Queued for institutional review.</p>
         </div>
         <div className="surface-panel rounded-3xl p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Verified records</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-600">Verified records</p>
           <p className="mt-3 text-4xl font-semibold text-slate-950 dark:text-white">{metrics.verified}</p>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Anchored and visible to employers.</p>
         </div>
         <div className="surface-panel rounded-3xl p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Rejected records</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-rose-600">Rejected records</p>
           <p className="mt-3 text-4xl font-semibold text-slate-950 dark:text-white">{metrics.rejected}</p>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Returned for correction or follow-up.</p>
         </div>
       </div>
 

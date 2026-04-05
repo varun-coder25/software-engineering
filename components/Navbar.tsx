@@ -10,9 +10,15 @@ import { supabase } from "@/lib/supabaseClient";
 
 type NavbarProps = {
   email?: string;
+  eyebrow?: string;
+  title?: string;
 };
 
-export default function Navbar({ email }: NavbarProps) {
+export default function Navbar({
+  email,
+  eyebrow = "Student Control Center",
+  title = "VIT Academic Certificate Verification Portal"
+}: NavbarProps) {
   const [loggingOut, setLoggingOut] = useState(false);
   const router = useRouter();
 
@@ -28,10 +34,10 @@ export default function Navbar({ email }: NavbarProps) {
       <div className="min-w-0">
         <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-700 dark:text-sky-300">
           <Sparkles className="h-4 w-4" />
-          Student Control Center
+          {eyebrow}
         </div>
         <h1 className="mt-2 text-xl font-semibold text-slate-900 dark:text-white sm:text-2xl">
-          VIT Academic Certificate Verification Portal
+          {title}
         </h1>
       </div>
 

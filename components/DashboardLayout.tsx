@@ -10,6 +10,11 @@ type DashboardLayoutProps = {
   title: string;
   description: string;
   navItems: SidebarNavItem[];
+  navbarEyebrow?: string;
+  navbarTitle?: string;
+  sidebarEyebrow?: string;
+  sidebarTitle?: string;
+  sidebarDescription?: string;
   highlights?: {
     label: string;
     title: string;
@@ -24,6 +29,11 @@ export default function DashboardLayout({
   title,
   description,
   navItems,
+  navbarEyebrow,
+  navbarTitle,
+  sidebarEyebrow,
+  sidebarTitle,
+  sidebarDescription,
   highlights = [
     {
       label: "Certificate Layer",
@@ -43,10 +53,19 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-[1440px] gap-6 xl:items-start">
-        <SidebarNav navItems={navItems} />
+        <SidebarNav
+          description={sidebarDescription}
+          eyebrow={sidebarEyebrow}
+          navItems={navItems}
+          title={sidebarTitle}
+        />
 
         <main className="min-w-0 flex-1 space-y-6">
-          <Navbar email={email} />
+          <Navbar
+            email={email}
+            eyebrow={navbarEyebrow}
+            title={navbarTitle}
+          />
 
           <section className="overview-grid" id="overview">
             <Card className="min-w-0 overflow-hidden border-sky-100/70 bg-gradient-to-br from-white via-white to-sky-50/70 dark:border-slate-800 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">

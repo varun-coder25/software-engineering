@@ -50,6 +50,11 @@ export default function EmployerDashboard({ email }: { email?: string }) {
       eyebrow="Employer Validation"
       title="Search students and verify institution-approved academic proof."
       description="Employers only see approved records, including institution verification status and clickable Sepolia blockchain proof."
+      navbarEyebrow="Employer Verification Desk"
+      navbarTitle="Verified Academic Records Portal"
+      sidebarEyebrow="Employer Workspace"
+      sidebarTitle="Validate student proof with institution-backed evidence."
+      sidebarDescription="Search approved submissions, review GPA snapshots, and open Sepolia proof links without any special blockchain tooling."
       navItems={[
         { href: "#overview", label: "Dashboard" },
         { href: "#certificates", label: "Certificates" }
