@@ -3,7 +3,6 @@
 import { BellRing, LogOut, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
@@ -53,7 +52,6 @@ export default function Navbar({
           <Badge variant="success">Active</Badge>
         </div>
 
-        <ThemeToggle />
         <Button
           size="sm"
           variant="outline"
