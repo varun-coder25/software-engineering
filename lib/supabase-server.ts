@@ -1,23 +1,26 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+function getSupabaseConfig() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Missing Supabase environment variables.");
-}
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("Missing Supabase environment variables.");
+  }
 
-if (!supabaseServiceRoleKey) {
-  throw new Error("Missing Supabase service role environment variable.");
+  return {
+    supabaseUrl,
+    supabaseAnonKey,
+    supabaseServiceRoleKey
+  };
 }
 
 export function createSupabaseServerClient(accessToken?: string) {
-  const url = supabaseUrl as string;
-  const anonKey = supabaseAnonKey as string;
+  const { supabaseUrl, supabaseAnonKey } = getSupabaseConfig();
 
-  return createClient(url, anonKey, {
+  return createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false
@@ -33,7 +36,13 @@ export function createSupabaseServerClient(accessToken?: string) {
 }
 
 export function createSupabaseServiceClient() {
-  return createClient(supabaseUrl as string, supabaseServiceRoleKey as string, {
+  const { supabaseUrl, supabaseServiceRoleKey } = getSupabaseConfig();
+
+  if (!supabaseServiceRoleKey) {
+    throw new Error("Missing Supabase service role environment variable.");
+  }
+
+  return createClient(supabaseUrl, supabaseServiceRoleKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false
