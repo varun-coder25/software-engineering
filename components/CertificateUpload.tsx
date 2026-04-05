@@ -145,17 +145,16 @@ export default function CertificateUpload({
     setError("");
 
     try {
+      const formData = new FormData();
+      formData.append("file", storedFile.file);
+      formData.append("fileName", storedFile.file.name);
+      formData.append("hash", fileHash);
+      formData.append("gpa", Number.isFinite(currentGpa) ? String(currentGpa) : "");
+      formData.append("cgpa", Number.isFinite(currentCgpa) ? String(currentCgpa) : "");
+
       const response = await authorizedFetch("/api/certificates", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          fileName: storedFile.file.name,
-          hash: fileHash,
-          gpa: Number.isFinite(currentGpa) ? currentGpa : null,
-          cgpa: Number.isFinite(currentCgpa) ? currentCgpa : null
-        })
+        body: formData
       });
 
       const data = await response.json();
@@ -165,8 +164,8 @@ export default function CertificateUpload({
       }
 
       setPendingStatus(data.certificate.status);
-      setMessage("Certificate submitted successfully. Waiting for admin review.");
-      toast.success("Certificate submitted for institutional verification.");
+      setMessage("Certificate uploaded to storage and submitted successfully.");
+      toast.success("Certificate uploaded and submitted for institutional verification.");
       onCreated(data.certificate);
     } catch (submitError) {
       const nextError =

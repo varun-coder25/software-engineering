@@ -94,9 +94,17 @@ export default function CertificatesTable({
                       ) : null}
                       <td className="px-4 py-4 text-sm text-slate-200">
                         <div className="font-medium">{certificate.file_name ?? "Certificate record"}</div>
-                        <div className="text-xs text-slate-400">
-                          Preview available when storage is connected
-                        </div>
+                        {certificate.file_url ? (
+                          <Link
+                            className="inline-flex items-center gap-2 text-xs text-sky-300 hover:text-sky-200"
+                            href={certificate.file_url}
+                            target="_blank"
+                          >
+                            Open uploaded file <ExternalLink className="h-3 w-3" />
+                          </Link>
+                        ) : (
+                          <div className="text-xs text-slate-400">No storage file URL saved</div>
+                        )}
                       </td>
                       <td className="max-w-[220px] px-4 py-4 text-xs text-slate-300">
                         <div className="break-all font-mono">{certificate.hash}</div>

@@ -3,6 +3,7 @@ import { getRequestContext } from "@/lib/server-auth";
 import { createSupabaseServiceClient } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
+const STORAGE_BUCKET = "certificates";
 
 function getErrorMessage(error: unknown, fallback: string) {
   if (error instanceof Error && error.message) {
@@ -25,6 +26,25 @@ function getErrorMessage(error: unknown, fallback: string) {
   }
 
   return fallback;
+}
+
+function sanitizeFileName(fileName: string) {
+  return fileName
+    .trim()
+    .replace(/[^a-zA-Z0-9._-]/g, "-")
+    .replace(/-+/g, "-");
+}
+
+async function ensureStorageBucket() {
+  const adminSupabase = createSupabaseServiceClient();
+  const { error } = await adminSupabase.storage.createBucket(STORAGE_BUCKET, {
+    public: true,
+    fileSizeLimit: 10 * 1024 * 1024
+  });
+
+  if (error && !error.message.toLowerCase().includes("already exists")) {
+    throw error;
+  }
 }
 
 export async function GET(request: Request) {
@@ -77,21 +97,73 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Only students can create certificates." }, { status: 403 });
     }
 
-    const body = await request.json();
-    const hash = typeof body.hash === "string" ? body.hash.trim() : "";
-    const fileName = typeof body.fileName === "string" ? body.fileName.trim() : null;
-    const gpa = typeof body.gpa === "number" ? body.gpa : null;
-    const cgpa = typeof body.cgpa === "number" ? body.cgpa : null;
+    const contentType = request.headers.get("content-type") ?? "";
+    let hash = "";
+    let fileName: string | null = null;
+    let gpa: number | null = null;
+    let cgpa: number | null = null;
+    let file: File | null = null;
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+      hash = typeof formData.get("hash") === "string" ? String(formData.get("hash")).trim() : "";
+      fileName =
+        typeof formData.get("fileName") === "string" ? String(formData.get("fileName")).trim() : null;
+      gpa =
+        typeof formData.get("gpa") === "string" && formData.get("gpa") !== ""
+          ? Number(formData.get("gpa"))
+          : null;
+      cgpa =
+        typeof formData.get("cgpa") === "string" && formData.get("cgpa") !== ""
+          ? Number(formData.get("cgpa"))
+          : null;
+
+      const uploadedFile = formData.get("file");
+      file = uploadedFile instanceof File ? uploadedFile : null;
+    } else {
+      const body = await request.json();
+      hash = typeof body.hash === "string" ? body.hash.trim() : "";
+      fileName = typeof body.fileName === "string" ? body.fileName.trim() : null;
+      gpa = typeof body.gpa === "number" ? body.gpa : null;
+      cgpa = typeof body.cgpa === "number" ? body.cgpa : null;
+    }
 
     if (!hash) {
       return NextResponse.json({ error: "Certificate hash is required." }, { status: 400 });
     }
 
+    if (!file) {
+      return NextResponse.json({ error: "Certificate file is required." }, { status: 400 });
+    }
+
+    const adminSupabase = createSupabaseServiceClient();
+    await ensureStorageBucket();
+
+    const safeFileName = sanitizeFileName(fileName ?? file.name ?? "certificate");
+    const storagePath = `${user.id}/${Date.now()}-${safeFileName}`;
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+
+    const { error: uploadError } = await adminSupabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(storagePath, fileBuffer, {
+        cacheControl: "3600",
+        contentType: file.type || undefined,
+        upsert: false
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const {
+      data: { publicUrl }
+    } = adminSupabase.storage.from(STORAGE_BUCKET).getPublicUrl(storagePath);
+
     const payload = {
       user_id: user.id,
       student_email: user.email ?? null,
-      file_name: fileName,
-      file_url: null,
+      file_name: fileName ?? file.name ?? null,
+      file_url: publicUrl,
       hash,
       status: "PENDING",
       tx_hash: null,
@@ -100,8 +172,6 @@ export async function POST(request: Request) {
       gpa,
       cgpa
     };
-
-    const adminSupabase = createSupabaseServiceClient();
 
     const { data, error } = await adminSupabase
       .from("certificates")
@@ -112,6 +182,7 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
+      await adminSupabase.storage.from(STORAGE_BUCKET).remove([storagePath]);
       throw error;
     }
 
