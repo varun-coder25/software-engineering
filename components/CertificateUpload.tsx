@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const supportedTypes = ["application/pdf", "image/jpeg", "image/png"];
+const MAX_FILE_SIZE_BYTES = 4 * 1024 * 1024;
 
 type StoredFile = {
   file: File;
@@ -107,6 +108,14 @@ export default function CertificateUpload({
       return;
     }
 
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      const nextError = "File is too large. Please upload a file smaller than 4 MB.";
+      setError(nextError);
+      setMessage("");
+      toast.error(nextError);
+      return;
+    }
+
     if (storedFile?.previewUrl) {
       URL.revokeObjectURL(storedFile.previewUrl);
     }
@@ -157,10 +166,22 @@ export default function CertificateUpload({
         body: formData
       });
 
-      const data = await response.json();
+      const rawResponse = await response.text();
+      const contentType = response.headers.get("content-type") ?? "";
+      const data = contentType.includes("application/json") && rawResponse
+        ? JSON.parse(rawResponse)
+        : null;
 
       if (!response.ok) {
-        throw new Error(data.error ?? "Failed to create certificate record.");
+        throw new Error(
+          data?.error ??
+            rawResponse?.trim() ??
+            "Failed to create certificate record."
+        );
+      }
+
+      if (!data?.certificate) {
+        throw new Error("Upload completed but the server returned an unexpected response.");
       }
 
       setPendingStatus(data.certificate.status);
@@ -258,7 +279,8 @@ export default function CertificateUpload({
                 </p>
                 <p className="max-w-xl text-sm leading-6 text-slate-400">
                   PDF, JPG, and PNG are supported. The app hashes the file
-                  locally before creating a pending verification record.
+                  locally before creating a pending verification record. Max
+                  file size: 4 MB.
                 </p>
               </div>
               <Button onClick={() => inputRef.current?.click()} type="button">
